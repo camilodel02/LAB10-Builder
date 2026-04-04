@@ -101,23 +101,42 @@ D: Fecha_Emision
 E: Numero_Factura
 F: Concepto_Gasto
 G: Monto_COP
-H: Confianza_Extraccion_IA (%)
-I: Estado_Validacion_IA
-J: Aprobado_Por
-K: Fecha_Aprobacion
-L: Centro_Costo
-M: Observaciones
-N: Fecha_Carga_Sistema
-O: Ciudad
+H: Monto_COP_Letras
+I: Confianza_Extraccion_IA (%)
+J: Estado_Validacion_IA
+K: Aprobado_Por
+L: Fecha_Aprobacion
+M: Centro_Costo
+N: Observaciones
+O: Fecha_Carga_Sistema
+P: Ciudad
 ```
 
 **Example Data Rows:**
 
-```
-UUID-123 | 123.456.789-1 | Distribuidor Dental X | 2026-04-01 | FAC-001234 | insumos odontologicos | 350000 | 94% | aprobado | accounting_001 | 2026-04-01 10:00 | operaciones | - | 2026-04-01 09:30 | Pasto
-UUID-124 | 987.654.321-5 | Equipos Médicos Y | 2026-04-02 | INV-5678 | equipos | 1200000 | 91% | aprobado | accounting_001 | 2026-04-02 11:15 | capital | Inversión en equipo de radiografía | 2026-04-02 10:45 | Pasto
-UUID-456 | [MANUAL ENTRY] | Proveedor Desconocido | 2026-03-31 | MANUAL | servicios profesionales | [CORREGIDO A 450000] | 53% | aprobado_con_correcciones | manager_002 | 2026-04-01 14:30 | operaciones | NIT ilegible, cantidad y concepto corregidos manualmente | 2026-04-01 08:00 | Pasto
-```
+**Registro 1 — Aprobado (Alta confianza IA)**
+- Comprobante: UUID-123 | NIT: 123.456.789-1 | Razón Social: Distribuidor Dental X
+- Fecha: 2026-04-01 | Factura: FAC-001234 | Concepto: insumos odontologicos
+- Monto: $350,000 COP (Trescientos cincuenta mil pesos COP) | Confianza IA: 94% → ✅ Aprobado automáticamente
+- Centro Costo: operaciones | Cargado: 2026-04-01 09:30 | Aprobado: 2026-04-01 10:00 por accounting_001
+
+---
+
+**Registro 2 — Aprobado (Alta confianza IA + Observación manual)**
+- Comprobante: UUID-124 | NIT: 987.654.321-5 | Razón Social: Equipos Médicos Y
+- Fecha: 2026-04-02 | Factura: INV-5678 | Concepto: equipos
+- Monto: $1,200,000 COP (Un millón doscientos mil pesos COP) | Confianza IA: 91% → ✅ Aprobado
+- Observación: Inversión en equipo de radiografía
+- Centro Costo: capital | Cargado: 2026-04-02 10:45 | Aprobado: 2026-04-02 11:15 por accounting_001
+
+---
+
+**Registro 3 — Aprobado con correcciones (Baja confianza IA)**
+- Comprobante: UUID-456 | NIT: [MANUAL ENTRY - ilegible] | Razón Social: Proveedor Desconocido
+- Fecha: 2026-03-31 | Factura: MANUAL | Concepto: servicios profesionales
+- Monto: $450,000 COP (Cuatrocientos cincuenta mil pesos COP) - corregido | Confianza IA: 53% → ⚠️ Manager corrigió manualmente
+- Observación: NIT ilegible, cantidad y concepto corregidos manualmente
+- Centro Costo: operaciones | Cargado: 2026-04-01 08:00 | Aprobado: 2026-04-01 14:30 por manager_002
 
 ---
 

@@ -1,38 +1,38 @@
-# Protocolo de Review de Código Generado por IA
+# Protocolo de Review de Codigo Generado por IA
 
-## Introducción
-Breve checklist fijo y reproducible para revisar PRs con código generado por IA antes de commit.
+## Introduccion
+Breve checklist fijo y reproducible para revisar PRs con codigo generado por IA antes de commit.
 
-## Checklist mínimo (5 puntos)
-1. Imports / librerías
-   - Pregunta clave: ¿Ese import realmente existe?
-   - Revisar: documentación oficial y repositorio del paquete.
-   - Detectar alucinaciones de librerías o APIs inexistentes.
+## Checklist minimo (5 puntos)
+1. Imports / librerias
+   - Pregunta clave: Ese import realmente existe? eoeoe
+   - Revisar: documentacion oficial y repositorio del paquete.
+   - Detectar alucinaciones de librerias o APIs inexistentes.
 
-2. Lógica de negocio y cálculos
-   - Pregunta clave: ¿las reglas se alinean con el brief?
-   - Revisar: fórmulas, redondeos, casos límite, reglas de negocio especializadas.
+2. Logica de negocio y calculos
+   - Pregunta clave: las reglas se alinean con el brief?
+   - Revisar: formulas, redondeos, casos limite, reglas de negocio especializadas.
 
 3. Seguridad
-   - Pregunta clave: ¿hay inyección SQL, validación de inputs y manejo de credenciales?
-   - Revisar: sanitización, permisos, no exponer datos sensibles.
+   - Pregunta clave: hay inyeccion SQL, validacion de inputs y manejo de credenciales?
+   - Revisar: sanitizacion, permisos, no exponer datos sensibles.
 
-4. Pérdida de contexto del brief
-   - Pregunta clave: ¿se respetaron todos los constraints y requisitos?
+4. Pï¿½rdida de contexto del brief
+   - Pregunta clave: se respetaron todos los constraints y requisitos?
    - Revisar: inputs/outputs esperados, restricciones de stack, flujos definidos.
 
-5. Punto específico del stack
-   - Personalizar según entorno (por ejemplo):
+5. Punto especifico del stack
+   - Personalizar segun entorno (por ejemplo):
      - Ejecutar tests nuevos en pipeline.
      - Confirmar que no hay logging de datos sensibles.
-     - Verificar que el código respeta la arquitectura del proyecto.
+     - Verificar que el codigo respeta la arquitectura del proyecto.
 
-## Procedimiento de revisión
+## Procedimiento de revision
 - `git diff` para ver cambios exactos.
 - Ejecutar suite de tests localmente.
-- Revisar documentación y comentarios generados.
-- Marcar cada punto con  o  y notas de acción.
+- Revisar documentacion y comentarios generados.
+- Marcar cada punto con  o  y notas de accion.
 
 ## Resultado esperado
-- PR aprobado solo cuando todos los puntos críticos estén resueltos o mitigados.
-- Si un punto falla, agregar comentario e indicar corrección requerida.
+- PR aprobado solo cuando todos los puntos criticos estan resueltos o mitigados.
+- Si un punto falla, agregar comentario e indicar correccion requerida.

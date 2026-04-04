@@ -71,6 +71,8 @@ Receipt file (PDF or JPG/PNG image)
 {
   "nit": "123.456.789-1",
   "nit_confidence": 0.92,
+  "ciudad": "Pasto",
+  "ciudad_confidence": 0.90,
   "date": "2026-04-01",
   "date_confidence": 0.95,
   "amount_cop": 250000,
@@ -87,7 +89,34 @@ Same JSON + approval info (who approved, when)
 
 ### Output - Stage 3 (Excel Export)
 ```
-NIT | Date | Amount (COP) | Concept | Confidence | Approved By | Date Approved
+Excel file with all approved and validated expense records.
+
+**Excel Column Structure:**
+
+```
+A: Comprobante No.
+B: NIT_Proveedor
+C: Razon_Social
+D: Fecha_Emision
+E: Numero_Factura
+F: Concepto_Gasto
+G: Monto_COP
+H: Confianza_Extraccion_IA (%)
+I: Estado_Validacion_IA
+J: Aprobado_Por
+K: Fecha_Aprobacion
+L: Centro_Costo
+M: Observaciones
+N: Fecha_Carga_Sistema
+O: Ciudad
+```
+
+**Example Data Rows:**
+
+```
+UUID-123 | 123.456.789-1 | Distribuidor Dental X | 2026-04-01 | FAC-001234 | insumos odontologicos | 350000 | 94% | aprobado | accounting_001 | 2026-04-01 10:00 | operaciones | - | 2026-04-01 09:30 | Pasto
+UUID-124 | 987.654.321-5 | Equipos Médicos Y | 2026-04-02 | INV-5678 | equipos | 1200000 | 91% | aprobado | accounting_001 | 2026-04-02 11:15 | capital | Inversión en equipo de radiografía | 2026-04-02 10:45 | Pasto
+UUID-456 | [MANUAL ENTRY] | Proveedor Desconocido | 2026-03-31 | MANUAL | servicios profesionales | [CORREGIDO A 450000] | 53% | aprobado_con_correcciones | manager_002 | 2026-04-01 14:30 | operaciones | NIT ilegible, cantidad y concepto corregidos manualmente | 2026-04-01 08:00 | Pasto
 ```
 
 ---

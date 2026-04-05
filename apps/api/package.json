@@ -1,0 +1,11 @@
+{
+  "name": "@lab10/api",
+  "private": true,
+  "scripts": {
+    "dev": "cross-env PYTHONPATH=src python -m uvicorn lab10_api.main:app --reload --host 127.0.0.1 --port 8000",
+    "test": "cross-env PYTHONPATH=src python -m pytest tests -v"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
+  }
+}

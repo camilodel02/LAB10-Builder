@@ -1,7 +1,16 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import HomePage from "./HomePage";
+
+function renderHome() {
+  return render(
+    <MemoryRouter>
+      <HomePage />
+    </MemoryRouter>,
+  );
+}
 
 const signOut = vi.fn();
 
@@ -24,7 +33,7 @@ describe("HomePage", () => {
   });
 
   it("F7: archivo no permitido muestra error sin llamar fetch", async () => {
-    render(<HomePage />);
+    renderHome();
     const input = screen.getAllByTestId("receipt-file-input")[0] as HTMLInputElement;
     const bad = new File(["x"], "note.txt", { type: "text/plain" });
     fireEvent.change(input, { target: { files: [bad] } });
@@ -39,7 +48,7 @@ describe("HomePage", () => {
       text: () => Promise.resolve(JSON.stringify({ receipt_id: "rid-123" })),
     } as Response);
 
-    render(<HomePage />);
+    renderHome();
     const input = screen.getAllByTestId("receipt-file-input")[0] as HTMLInputElement;
     const good = new File(["%PDF"], "r.pdf", { type: "application/pdf" });
     fireEvent.change(input, { target: { files: [good] } });
@@ -61,7 +70,7 @@ describe("HomePage", () => {
       text: () => Promise.resolve(JSON.stringify({ detail: "Tipo no permitido: x." })),
     } as Response);
 
-    render(<HomePage />);
+    renderHome();
     const input = screen.getAllByTestId("receipt-file-input")[0] as HTMLInputElement;
     const good = new File(["%PDF"], "r.pdf", { type: "application/pdf" });
     fireEvent.change(input, { target: { files: [good] } });

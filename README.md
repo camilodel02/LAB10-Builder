@@ -47,3 +47,12 @@ Para `npm run dev:api` sin activar el venv, necesitas que `python` en PATH tenga
 
 - **API:** `apps/api/tests/unit/` — pytest; `pythonpath` incluye `src` vía `pyproject.toml`.
 - **App:** `apps/app/src/**/*.test.ts(x)` — Vitest + jsdom; setup en `src/test/setup.ts`.
+
+## Trazabilidad reciente
+
+<!-- documentation-engineer:rolling-summary -->
+**Última actualización documentada:** 2026-04-04
+
+- [App] Ruta protegida `/profile` (Mi cuenta): cambio de correo y contraseña mediante Supabase Auth (`updateUser`).
+- [App] Enlace «Mi cuenta» en el home hacia `/profile`; pruebas en `ProfilePage.test.tsx`.
+<!-- /documentation-engineer:rolling-summary -->

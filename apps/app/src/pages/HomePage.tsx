@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { Link } from "react-router-dom";
 
 import { useAuth } from "../auth/AuthContext";
 import { isAllowedReceiptFile, uploadReceipt } from "../lib/uploadReceipt";
@@ -75,13 +76,22 @@ export default function HomePage() {
               Sube PDF o imagen del recibo de pago (alineado a la API).
             </p>
           </div>
-          <button
-            type="button"
-            onClick={() => void signOut()}
-            className="shrink-0 rounded-lg border border-slate-700 px-3 py-1.5 text-sm text-slate-300 hover:bg-slate-800"
-          >
-            Cerrar sesión
-          </button>
+          <div className="flex shrink-0 flex-col items-end gap-2 sm:flex-row sm:items-center">
+            <Link
+              to="/profile"
+              className="rounded-lg border border-slate-700 px-3 py-1.5 text-sm text-sky-400 hover:bg-slate-800"
+              data-testid="home-link-profile"
+            >
+              Mi cuenta
+            </Link>
+            <button
+              type="button"
+              onClick={() => void signOut()}
+              className="rounded-lg border border-slate-700 px-3 py-1.5 text-sm text-slate-300 hover:bg-slate-800"
+            >
+              Cerrar sesión
+            </button>
+          </div>
         </header>
 
         <div

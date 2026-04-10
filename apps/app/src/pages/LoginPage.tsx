@@ -1,5 +1,5 @@
 import { type FormEvent, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../auth/AuthContext";
 import { supabase } from "../lib/supabaseClient";
@@ -94,6 +94,12 @@ export default function LoginPage() {
             {submitting ? "Entrando…" : "Entrar"}
           </button>
         </form>
+        <p className="mt-4 text-center text-sm text-slate-400">
+          ¿No tienes cuenta?{" "}
+          <Link to="/register" className="text-sky-400 hover:text-sky-300" data-testid="login-link-register">
+            Crear cuenta
+          </Link>
+        </p>
       </div>
     </main>
   );

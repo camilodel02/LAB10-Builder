@@ -1,37 +1,14 @@
-import { type FormEvent, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 
 import { useAuth } from "../auth/AuthContext";
-import { supabase } from "../lib/supabaseClient";
-
-function mapUpdateError(message: string): string {
-  const m = message.toLowerCase();
-  if (m.includes("password") && (m.includes("short") || m.includes("least"))) {
-    return "La contraseña no cumple la longitud mínima (6 caracteres).";
-  }
-  if (m.includes("invalid") && m.includes("email")) {
-    return "El correo electrónico no es válido.";
-  }
-  if (m.includes("same")) {
-    return "El nuevo valor debe ser distinto al actual.";
-  }
-  return "No se pudo actualizar. Revisa los datos e inténtalo de nuevo.";
-}
+import { useProfileEmailChange } from "../auth/useProfileEmailChange";
+import { useProfilePasswordChange } from "../auth/useProfilePasswordChange";
 
 export default function ProfilePage() {
   const { session, loading } = useAuth();
 
-  const [newEmail, setNewEmail] = useState("");
-  const [newEmailConfirm, setNewEmailConfirm] = useState("");
-  const [emailError, setEmailError] = useState<string | null>(null);
-  const [emailInfo, setEmailInfo] = useState<string | null>(null);
-  const [emailSubmitting, setEmailSubmitting] = useState(false);
-
-  const [newPassword, setNewPassword] = useState("");
-  const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
-  const [passwordError, setPasswordError] = useState<string | null>(null);
-  const [passwordInfo, setPasswordInfo] = useState<string | null>(null);
-  const [passwordSubmitting, setPasswordSubmitting] = useState(false);
+  const emailForm = useProfileEmailChange(session?.user?.email ?? "");
+  const passwordForm = useProfilePasswordChange();
 
   if (loading) {
     return (
@@ -46,71 +23,6 @@ export default function ProfilePage() {
   }
 
   const currentEmail = session.user.email ?? "";
-
-  async function onSubmitEmail(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setEmailError(null);
-    setEmailInfo(null);
-    const next = newEmail.trim();
-    if (!next || !newEmailConfirm.trim()) {
-      setEmailError("Complete el nuevo correo y su confirmación.");
-      return;
-    }
-    if (next !== newEmailConfirm.trim()) {
-      setEmailError("Los correos no coinciden.");
-      return;
-    }
-    if (next.toLowerCase() === currentEmail.toLowerCase()) {
-      setEmailError("El nuevo correo debe ser distinto al actual.");
-      return;
-    }
-    setEmailSubmitting(true);
-    const { data, error } = await supabase.auth.updateUser({ email: next });
-    setEmailSubmitting(false);
-    if (error) {
-      setEmailError(mapUpdateError(error.message));
-      return;
-    }
-    setNewEmail("");
-    setNewEmailConfirm("");
-    if (data.user?.new_email) {
-      setEmailInfo(
-        "Revisa tu correo actual y el nuevo para confirmar el cambio (en local: bandeja de Inbucket / correo de prueba de Supabase).",
-      );
-    } else if (data.user?.email === next) {
-      setEmailInfo("Correo actualizado correctamente.");
-    } else {
-      setEmailInfo("Revisa tu correo para completar el cambio de dirección si tu entorno requiere confirmación.");
-    }
-  }
-
-  async function onSubmitPassword(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setPasswordError(null);
-    setPasswordInfo(null);
-    if (!newPassword || !newPasswordConfirm) {
-      setPasswordError("Complete la nueva contraseña y su confirmación.");
-      return;
-    }
-    if (newPassword !== newPasswordConfirm) {
-      setPasswordError("Las contraseñas no coinciden.");
-      return;
-    }
-    if (newPassword.length < 6) {
-      setPasswordError("La contraseña debe tener al menos 6 caracteres.");
-      return;
-    }
-    setPasswordSubmitting(true);
-    const { error } = await supabase.auth.updateUser({ password: newPassword });
-    setPasswordSubmitting(false);
-    if (error) {
-      setPasswordError(mapUpdateError(error.message));
-      return;
-    }
-    setNewPassword("");
-    setNewPasswordConfirm("");
-    setPasswordInfo("Contraseña actualizada correctamente.");
-  }
 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100 p-6">
@@ -127,7 +39,7 @@ export default function ProfilePage() {
           <p className="mt-1 text-xs text-slate-500">
             Puede requerir confirmación por email según la configuración del proyecto.
           </p>
-          <form className="mt-4 space-y-4" onSubmit={(ev) => void onSubmitEmail(ev)} noValidate>
+          <form className="mt-4 space-y-4" onSubmit={(ev) => void emailForm.onSubmit(ev)} noValidate>
             <div>
               <label htmlFor="profile-new-email" className="block text-sm font-medium text-slate-300">
                 Nuevo correo
@@ -137,8 +49,8 @@ export default function ProfilePage() {
                 name="newEmail"
                 type="email"
                 autoComplete="email"
-                value={newEmail}
-                onChange={(ev) => setNewEmail(ev.target.value)}
+                value={emailForm.newEmail}
+                onChange={(ev) => emailForm.setNewEmail(ev.target.value)}
                 className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm outline-none focus:border-sky-600"
               />
             </div>
@@ -151,35 +63,35 @@ export default function ProfilePage() {
                 name="newEmailConfirm"
                 type="email"
                 autoComplete="email"
-                value={newEmailConfirm}
-                onChange={(ev) => setNewEmailConfirm(ev.target.value)}
+                value={emailForm.newEmailConfirm}
+                onChange={(ev) => emailForm.setNewEmailConfirm(ev.target.value)}
                 className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm outline-none focus:border-sky-600"
               />
             </div>
-            {emailError ? (
+            {emailForm.error ? (
               <p className="text-sm text-red-400" role="alert">
-                {emailError}
+                {emailForm.error}
               </p>
             ) : null}
-            {emailInfo ? (
+            {emailForm.info ? (
               <p className="text-sm text-sky-300" role="status">
-                {emailInfo}
+                {emailForm.info}
               </p>
             ) : null}
             <button
               type="submit"
               data-testid="profile-submit-email"
-              disabled={emailSubmitting}
+              disabled={emailForm.submitting}
               className="w-full rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-500 disabled:opacity-50"
             >
-              {emailSubmitting ? "Guardando…" : "Actualizar correo"}
+              {emailForm.submitting ? "Guardando…" : "Actualizar correo"}
             </button>
           </form>
         </section>
 
         <section className="mt-8 border-t border-slate-800 pt-6">
           <h2 className="text-lg font-medium text-slate-200">Cambiar contraseña</h2>
-          <form className="mt-4 space-y-4" onSubmit={(ev) => void onSubmitPassword(ev)} noValidate>
+          <form className="mt-4 space-y-4" onSubmit={(ev) => void passwordForm.onSubmit(ev)} noValidate>
             <div>
               <label htmlFor="profile-new-password" className="block text-sm font-medium text-slate-300">
                 Nueva contraseña
@@ -189,8 +101,8 @@ export default function ProfilePage() {
                 name="newPassword"
                 type="password"
                 autoComplete="new-password"
-                value={newPassword}
-                onChange={(ev) => setNewPassword(ev.target.value)}
+                value={passwordForm.newPassword}
+                onChange={(ev) => passwordForm.setNewPassword(ev.target.value)}
                 className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm outline-none focus:border-sky-600"
               />
             </div>
@@ -203,28 +115,28 @@ export default function ProfilePage() {
                 name="newPasswordConfirm"
                 type="password"
                 autoComplete="new-password"
-                value={newPasswordConfirm}
-                onChange={(ev) => setNewPasswordConfirm(ev.target.value)}
+                value={passwordForm.newPasswordConfirm}
+                onChange={(ev) => passwordForm.setNewPasswordConfirm(ev.target.value)}
                 className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm outline-none focus:border-sky-600"
               />
             </div>
-            {passwordError ? (
+            {passwordForm.error ? (
               <p className="text-sm text-red-400" role="alert">
-                {passwordError}
+                {passwordForm.error}
               </p>
             ) : null}
-            {passwordInfo ? (
+            {passwordForm.info ? (
               <p className="text-sm text-emerald-400" role="status">
-                {passwordInfo}
+                {passwordForm.info}
               </p>
             ) : null}
             <button
               type="submit"
               data-testid="profile-submit-password"
-              disabled={passwordSubmitting}
+              disabled={passwordForm.submitting}
               className="w-full rounded-lg bg-slate-700 px-4 py-2 text-sm font-medium text-white hover:bg-slate-600 disabled:opacity-50"
             >
-              {passwordSubmitting ? "Guardando…" : "Actualizar contraseña"}
+              {passwordForm.submitting ? "Guardando…" : "Actualizar contraseña"}
             </button>
           </form>
         </section>

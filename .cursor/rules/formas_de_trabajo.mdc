@@ -30,7 +30,7 @@ El flujo obligatorio de trabajo para cualquier implementación debe ser:
 1. **Diseño y aclaracion de los casos de uso**: Entiende primero el escenario para tener claros los criterios de aceptación.
 2. **Planea la implementación**: Haz el diseño para cumplir con esos casos de uso.
 3. **Implementación**: Entendiendo los casos de uso y el plan, implementa lo acordado.
-4. **Cierre**: Resume el cambio y los criterios cubiertos. No incluyas en estas reglas un protocolo de ejecución de pruebas ni reportes de QA; si el usuario pide validación explícita, sigue sus instrucciones (incluido el uso opcional de subagentes o skills del proyecto).
+4. **Cierre**: Resume el cambio y los criterios cubiertos. **Antes de dar la tarea por cerrada**, aplica el subagente **security-code-check** (`.cursor/agents/security-code-check.md`, OWASP Top 10) sobre el alcance del cambio, o una revisión equivalente con el mismo criterio; si hay hallazgos críticos o bloqueantes, corrígelos o documenta el riesgo de forma explícita. No incluyas en estas reglas un protocolo de ejecución de pruebas ni reportes de QA; si el usuario pide validación explícita, sigue sus instrucciones (incluido el uso opcional de subagentes o skills del proyecto).
 
 # Principios de Implementación
 1. **DRY:** No repitas código; abstrae lógica reutilizable.
